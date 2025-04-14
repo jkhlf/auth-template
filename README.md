@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Template de Autenticação
 
-## Getting Started
+Um template completo para aplicações Next.js com sistema de autenticação usando Auth.js, Prisma ORM e Supabase.
 
-First, run the development server:
+## Características
+
+- ✅ Login e registro de usuários
+- 🔐 Senhas criptografadas com bcrypt
+- 🔄 Gerenciamento de sessões com Auth.js
+- 📊 Banco de dados PostgreSQL com Supabase
+- 🛠️ Prisma ORM para manipulação do banco de dados
+- 📱 Interface responsiva com TailwindCSS
+
+## Estrutura do Projeto
+
+```
+app/
+  ├── api/
+  │   ├── auth/
+  │   │   └── [...nextauth]/   # Configuração do Auth.js
+  │   └── register/            # API para registro de usuários
+  ├── components/              # Componentes reutilizáveis
+  │   ├── AuthForm.tsx         # Formulário de login/registro
+  │   ├── AuthProvider.tsx     # Provedor de contexto de autenticação
+  │   └── Navbar.tsx           # Barra de navegação
+  ├── login/                   # Página de login
+  ├── register/                # Página de registro
+  ├── types/                   # Tipos personalizados
+  └── page.tsx                 # Página inicial
+prisma/
+  └── schema.prisma            # Schema do Prisma
+```
+
+## Configuração
+
+### 1. Clone este repositório
+
+```bash
+git clone <url-do-seu-repositorio>
+cd auth-template
+```
+
+### 2. Instale as dependências
+
+```bash
+npm install
+```
+
+### 3. Configure o Supabase
+
+1. Crie uma conta no [Supabase](https://supabase.io/)
+2. Crie um novo projeto
+3. Obtenha a URL de conexão do banco de dados
+
+### 4. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+```
+DATABASE_URL="postgresql://postgres:[SEU-PASSWORD]@db.[SEU-PROJECT-ID].supabase.co:5432/postgres"
+AUTH_SECRET="seu_auth_secret_aqui" # Gere um com: openssl rand -base64 32
+AUTH_URL="http://localhost:3000"
+```
+
+### 5. Execute as migrações do Prisma
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 6. Execute o projeto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Personalizando o Template
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Adicionar novos campos ao usuário
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Modifique o modelo `User` no arquivo `prisma/schema.prisma`
+2. Execute `npx prisma migrate dev --name add_user_fields`
+3. Atualize os componentes relevantes para incluir os novos campos
 
-## Learn More
+### Adicionar novos provedores de autenticação
 
-To learn more about Next.js, take a look at the following resources:
+1. Instale o provedor desejado (ex: `npm install @auth/github-provider`)
+2. Adicione o provedor na configuração do Auth.js em `app/api/auth/[...nextauth]/route.ts`
+3. Configure as variáveis de ambiente necessárias
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Implantação
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Banco de Dados
 
-## Deploy on Vercel
+O Supabase já está configurado como seu banco de dados em nuvem.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Aplicação
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Você pode implantar este template em plataformas como:
+
+- [Vercel](https://vercel.com) (recomendado)
+- [Netlify](https://netlify.com)
+- [Railway](https://railway.app)
+
+## Licença
+
+Este projeto está sob a licença MIT.
