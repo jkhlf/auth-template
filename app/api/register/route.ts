@@ -2,6 +2,25 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { prisma } from "../../lib/prisma";
 
+const validatePassword = (
+  password: string
+): { valid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+
+  if (password.length < 8) {
+    errors.push("A senha deve ter no mínimo 8 caracteres.");
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    errors.push("A senha deve conter pelo menos uma letra maiúscula.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors: errors,
+  };
+};
+
 export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json();
@@ -13,7 +32,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verificar se o usuário já existe
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -25,11 +43,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Criptografar a senha
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Criar o novo usuário com senha criptografada
     const newUser = await prisma.user.create({
       data: {
         name,
